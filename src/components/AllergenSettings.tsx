@@ -97,8 +97,17 @@ export default function AllergenSettings({ onClose }: AllergenSettingsProps) {
       }
 
       const replace = window.confirm('OK = remplacer les recettes existantes. Annuler = ajouter sans doublons de nom.');
-      actions.importRecipes(importedRecipes as Recipe[], replace ? 'replace' : 'append');
-      window.alert(`${importedRecipes.length} recettes lues depuis le fichier.`);
+      
+      // Avertissement pour bulk import
+      if (importedRecipes.length > 50) {
+        const confirm = window.confirm(
+          `⚠️ Bulk import: ${importedRecipes.length} recettes seront importées dans Supabase.\n\nCet import peut prendre quelques secondes. Continuer ?`
+        );
+        if (!confirm) return;
+      }
+
+      await actions.importRecipes(importedRecipes as Recipe[], replace ? 'replace' : 'append');
+      window.alert(`✅ ${importedRecipes.length} recettes importées avec succès !`);
     } catch (error) {
       console.error('Erreur import JSON:', error);
       window.alert('Import impossible: verifie le format JSON.');

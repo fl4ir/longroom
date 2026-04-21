@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect, useState } fro
 import { v4 as uuidv4 } from 'uuid';
 import type { Recipe, Category, AppState, SearchFilters } from '../types';
 import { detectAllergens, calculateTotalWeight } from '../utils/recipeUtils';
-import { fetchRecipes, createRecipe as createRecipeInDB, updateRecipe as updateRecipeInDB, deleteRecipe as deleteRecipeInDB } from '../lib/recipes';
+import { fetchRecipes, createRecipe as createRecipeInDB, updateRecipe as updateRecipeInDB, deleteRecipe as deleteRecipeInDB, bulkImportRecipes } from '../lib/recipes';
 import type { User } from '@supabase/supabase-js';
 
 // Données de test
@@ -284,7 +284,7 @@ const AppContext = createContext<{
     setCustomAllergenExceptions: (exceptions: Record<string, string[]>) => void;
     setSelectingLinkedRecipeFor: (recipeId: string | null) => void;
     validateImportedRecipe: (id: string) => void;
-    importRecipes: (recipes: Recipe[], mode?: 'append' | 'replace') => void;
+    importRecipes: (recipes: Recipe[], mode?: 'append' | 'replace') => Promise<void>;
     loadTestData: () => void;
     updateTagColor: (tagName: string, color: string) => void;
     deleteTag: (tagName: string) => void;
@@ -584,7 +584,7 @@ export function AppProvider({ children, user, onSignOut }: AppProviderProps) {
       dispatch({ type: 'VALIDATE_IMPORTED_RECIPE', payload: id });
     },
 
-    importRecipes: (recipes: Recipe[], mode: 'append' | 'replace' = 'append') => {
+    importRecipes: async (recipes: Recipe[], mode: 'append' | 'replace' = 'append') => {
       const preparedImportedRecipes = recipes.map((recipe) => {
         const safeIngredients = (recipe.ingredients || []).map((ingredient) => ({
           ...ingredient,
@@ -609,7 +609,8 @@ export function AppProvider({ children, user, onSignOut }: AppProviderProps) {
           totalWeight: calculateTotalWeight(safeIngredients),
           priority: 'moyenne',
           importedAutomatically: true,
-          importPendingValidation: true
+          importPendingValidation: true,
+          user_id: user.id
         };
 
         const metadata = inferImportedMetadata(baseRecipe);
@@ -621,6 +622,19 @@ export function AppProvider({ children, user, onSignOut }: AppProviderProps) {
           notes: metadata.notes
         } as Recipe;
       });
+
+      try {
+        // Sauvegarder dans Supabase (bulk import)
+        if (preparedImportedRecipes.length > 0) {
+          console.log(`⏳ Import en cours de ${preparedImportedRecipes.length} recettes dans Supabase...`);
+          await bulkImportRecipes(user.id, preparedImportedRecipes);
+          console.log(`✅ ${preparedImportedRecipes.length} recettes importées dans Supabase`);
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'import bulk:', error);
+        window.alert(`⚠️ Erreur lors de l'import: ${error instanceof Error ? error.message : 'erreur inconnue'}`);
+        throw error;
+      }
 
       if (mode === 'replace') {
         dispatch({ type: 'SET_RECIPES', payload: preparedImportedRecipes });

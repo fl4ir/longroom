@@ -137,3 +137,53 @@ export async function deleteRecipe(recipeId: string) {
 
   if (error) throw error;
 }
+
+export async function bulkImportRecipes(userId: string, recipes: Recipe[]): Promise<number> {
+  if (recipes.length === 0) return 0;
+
+  // Préparer les recettes pour l'insertion
+  const recipesToInsert = recipes.map(recipe => ({
+    id: recipe.id,
+    user_id: userId,
+    name: recipe.name,
+    category: recipe.categories?.[0] || null,
+    servings: recipe.servings,
+    prep_time: recipe.prep_time,
+    cook_time: recipe.cook_time,
+    procedure: recipe.procedure,
+    source: recipe.source,
+    uses: recipe.usages,
+    tags: recipe.tags,
+    created_at: recipe.created_at || recipe.createdAt,
+    updated_at: new Date()
+  }));
+
+  // Insérer les recettes (en batch si nécessaire)
+  const { error: recipeError } = await supabase
+    .from('recipes')
+    .insert(recipesToInsert);
+
+  if (recipeError) throw recipeError;
+
+  // Préparer et insérer les ingrédients
+  const allIngredients = recipes.flatMap(recipe =>
+    (recipe.ingredients || []).map(ing => ({
+      id: ing.id,
+      recipe_id: recipe.id,
+      name: ing.name,
+      quantity: ing.quantity,
+      unit: ing.unit,
+      allergens: ing.allergens || []
+    }))
+  );
+
+  if (allIngredients.length > 0) {
+    const { error: ingredientsError } = await supabase
+      .from('ingredients')
+      .insert(allIngredients);
+
+    if (ingredientsError) throw ingredientsError;
+  }
+
+  return recipes.length;
+}
