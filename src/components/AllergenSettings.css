@@ -1,0 +1,269 @@
+.allergen-settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 999;
+}
+
+.allergen-settings {
+  width: min(100%, 820px);
+  max-height: 90vh;
+  background: var(--bg-primary);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.settings-body {
+  padding: 20px;
+  overflow: auto;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.allergen-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.import-section {
+  grid-column: 1 / -1;
+}
+
+.allergen-section h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.allergen-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.keyword-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.keyword-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  font-size: 13px;
+}
+
+.exception-section {
+  border-top: 1px dashed var(--border-color);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exception-section h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.exception-pill {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+.remove-keyword {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.keyword-add {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.keyword-add input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.keyword-add button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent-color);
+  color: white;
+  font-weight: 600;
+}
+
+.default-keywords {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.settings-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.settings-footer .secondary-button,
+.settings-footer .primary-button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.settings-footer .secondary-button {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.settings-footer .primary-button {
+  background: var(--accent-color);
+  color: white;
+}
+
+.add-allergen-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin: 12px 0;
+}
+
+.add-allergen-button:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.new-allergen-form {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  margin: 12px 0;
+}
+
+.new-allergen-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.new-allergen-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.new-allergen-input:focus {
+  outline: none;
+  border-color: var(--accent-color, #3b82f6);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.reset-button {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary, rgba(0, 0, 0, 0.04));
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.reset-button:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.reset-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirm-button {
+  background: var(--accent-color, #3b82f6);
+  color: white;
+  border-color: var(--accent-color, #3b82f6);
+}
+
+.confirm-button:hover:not(:disabled) {
+  background: var(--accent-color, #2563eb);
+  border-color: var(--accent-color, #2563eb);
+}
