@@ -14,6 +14,7 @@ export async function fetchRecipes(userId: string): Promise<Recipe[]> {
         allergens
       )
     `)
+    .eq('user_id', userId)
     .order('updated_at', { ascending: false });
 
   if (error) throw error;
