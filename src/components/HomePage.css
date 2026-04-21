@@ -124,7 +124,7 @@
 
 .recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   margin-top: 20px;
   min-height: 400px;
@@ -167,5 +167,37 @@
   
   .filter-chips {
     justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: 12px;
+  }
+
+  .home-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+
+  .home-header h1 {
+    font-size: 24px;
+  }
+
+  .search-section {
+    margin-bottom: 20px;
+  }
+
+  .recipes-grid {
+    gap: 12px;
+  }
+
+  .filters-panel {
+    padding: 12px;
+    margin-top: 16px;
+  }
+
+  .filter-group {
+    margin-bottom: 16px;
   }
 }
